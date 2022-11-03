@@ -41,7 +41,7 @@ data/*.rds
 
 #posts/**/*.html
 #posts/**/*_files/
-*.Rproj
+#*.Rproj
 
 
 #docs/templates/template_review_files/*

@@ -1,0 +1,16 @@
+{
+  "hash": "cd7b9e150383d11744ad67ab94dd746e",
+  "result": {
+    "markdown": "---\ntitle: \"Report: Perceived Religious Descrimination Among Religious New Zealanders: A national longitudinal investigation\"\nauthor: \"Joseph Bulbulia\"\neditor: visual\nbibliography: references.bib\nexecute:\n  echo: false\n  warning: false\n  message: false\n  output: false\n  error: false\n  include: false\n---\n\n\n## Overview\n\nWe have three interests.\n\nFirst, we leverage data from a national longitudinal study in New Zealand to describe trends in self-reported perceptions of anti-religious prejudice in New Zealand during the years 2015-2022.\n\nSecond, we leverage time-series data to identify whether it is religious commitment that is responsible for perceptions prejudice or some third factor. That is, leverage time-series data to identify causality.\n\nThird, we briefly speculate about the relevance of these findings to different audiences.\n\n## Method\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Time 2016 Cohort\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Results\n\n## Conclusion\n\nThe topic is under-researched. religious decline is slow. Although religious people are a minority in New Zealand, for most of New Zealand's colonial history there has been a religious majority. Because the decline in religious identification is less than 1% annually, the proportion of religious proportion year-to-year is not substantially different [@hoverd2015]. Like the receding of a glacier, the decline of the religious minority is not readily apparent to the naked eye. Although these facts may help to explain the poverty of research on anti-religious prejudice, they do not provide excuses for ignoring it.\n\n## Importance\n\nThere are three audiences who might be interested in the longitudinal study of anti-religious prejudice.\n\nFirst, there are social scientists. There has been considerable scientific attention to study of prejudice against historically marginalised groups. However, in countries such as New Zealand, religious people have only recently become the minority. Moreover, the bulk of prejudice research occurs in North America where the religiously identified remain a majority.\n\nSecond, there are philosophers and theologians. If we assume that good philosophy and theology must be grounded in the facts, it would seem important to include a growing religious minority in philosophical and theological reflection about prejudice.\n\nThird, there are members of religious communities, including clergy. If the study of anti-religious prejudice reveals that many religious people are indeed experiencing greater prejudice religious communities should want to know.\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

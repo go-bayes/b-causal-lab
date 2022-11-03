@@ -44,6 +44,7 @@ models/*.rds
 #posts/**/*_files/
 # data
 
+data/*
 data/*.rds
 #data_raw
 #*_cache/

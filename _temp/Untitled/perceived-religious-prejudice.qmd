@@ -1,0 +1,42 @@
+---
+title: "Perceived Religious Discrimination is Increasing in Religious New Zealanders"
+author: "Joseph Bulbulia"
+format: pdf
+execute: 
+  echo: false
+---
+
+## Overview
+
+First, we report trends in self-reported perceptions of perceptions of religious prejudice among secular and religious New Zealanders during the period 2015-2022.
+
+Second, we investigate whether increases in religious service attendance elicits greater self-reported prejudice, and likewise, whether decreases in religious service attendance elicits less-self reported prejudice.
+
+## Importance
+
+There are three groups that might be interested in the longitudinal study of anti-religious prejudice. 
+
+First,social scientists might be interested in the longitudinal study of antir religious prejudice becuase there is, presently, a gap in understanding.  There has been considerable attention across the humanities and social sciences to study of prejedice against historically marginalised groups. However, in countries such as New Zealand, religious people have only recently become the minority [cite]. Moreover, the bulk of prejudice research occurs in North America where the religiously identified remain a majority. Moreover, religious decline is slow. Although religious people are a minority in New Zealand, for most of New Zealand's colonial history there has been a religious majority. Because the decline in religious identification is less than 1% annually, the proportion of religious proportion year-to-year is not substantially different. Like the receding of a glacier, the decline of the religious minority is not readily apparent to the naked eye. Although these facts may help to explain the poverty of research on anti-religious prejudice, they do not provide excuses for ignoring it. 
+
+Second, philosophers and theologians might be interested in the study of anti-religious prejudice. To the extent that good philosophy and theology must be grounded in an accurate appreciation of the facts, it would seem important to include the growing religious minority in philosophical and theological reflection. 
+
+Third, members of religious communities, including clergy and leaders, might be interested in understanding the experiences of others in the community, particularly if the study of anti-religious prejudice reveals that some are indeed experiencing greater exclusion from the dominent non-religious majority. 
+
+```{r}
+library(rticles)
+```
+
+
+## Method
+
+<!-- Philosophers and Theologians are prone to disagree. However, nearly all agree that one can be held to the same standards to which one holds others. -->
+
+## Conclusion 
+
+
+
+
+
+
+
+

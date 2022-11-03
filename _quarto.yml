@@ -1,0 +1,31 @@
+project:
+  type: website
+  output-dir: docs
+
+toc: true
+
+website:
+  title: "b-causal-lab people and research"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - icon: github
+        href: https://github.com/go-bayes
+      - icon: twitter
+        href: https://twitter.com/prof_joe_
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    html-math-method: katex
+  pdf:
+    documentclass: report
+    margin-left: 30mm
+    margin-right: 30mm
+
+license: CC BY-NC-SA
+
+

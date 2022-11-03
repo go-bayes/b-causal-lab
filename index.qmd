@@ -1,0 +1,17 @@
+---
+title: "b-causal-lab"
+listing:
+  contents: posts
+page-layout: full
+---
+
+
+
+```{r, include = FALSE}
+library(here)
+# GitHub pages
+file.create("docs/.nojekyll", showWarnings = FALSE)
+# Ensure directories exist
+dir.create("data", FALSE)
+```
+

@@ -1,0 +1,34 @@
+---
+title: "Report: Perceived Religious Descrimination Among Religious New Zealanders: A national longitudinal investigation"
+author: "Joseph Bulbulia"
+editor: visual
+bibliography: references.bib
+execute:
+  warning: false
+---
+
+## Overview
+
+We have three interests.
+
+First, we leverage data from a national longitudinal study in New Zealand to describe trends in self-reported perceptions of anti-religious prejudice in New Zealand during the years 2015-2022.
+
+Second, we leverage time-series data to identify whether it is religious commitment that is responsible for perceptions prejudice or some third factor. That is, leverage time-series data to identify causality.
+
+Third, we briefly speculate about the relevance of these findings to different audiences.
+
+## Importance
+
+There are three audiences who might be interested in the longitudinal study of anti-religious prejudice.
+
+First, there are social scientists. There has been considerable scientific attention to study of prejudice against historically marginalised groups. However, in countries such as New Zealand, religious people have only recently become the minority. Moreover, the bulk of prejudice research occurs in North America where the religiously identified remain a majority.
+
+Second, there are philosophers and theologians. If we assume that good philosophy and theology must be grounded in the facts, it would seem important to include a growing religious minority in philosophical and theological reflection about prejudice.
+
+Third, there are members of religious communities, including clergy. If the study of anti-religious prejudice reveals that many religious people are indeed experiencing greater prejudice religious communities should want to know.
+
+## Method
+
+## Conclusion
+
+The topic is under-researched. religious decline is slow. Although religious people are a minority in New Zealand, for most of New Zealand's colonial history there has been a religious majority. Because the decline in religious identification is less than 1% annually, the proportion of religious proportion year-to-year is not substantially different [@hoverd2015]. Like the receding of a glacier, the decline of the religious minority is not readily apparent to the naked eye. Although these facts may help to explain the poverty of research on anti-religious prejudice, they do not provide excuses for ignoring it.

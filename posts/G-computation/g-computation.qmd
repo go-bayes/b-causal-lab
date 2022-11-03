@@ -1,10 +1,21 @@
 ---
 title: "G-computation"
-author: "Joseph Bulbulia"
+author: 
+  - name: Joseph Bulbulia
+    orcid: 0000-0002-5861-2056
+    affiliation: 1
+    corresponding: yes
+    address: Victoria University of Wellington, New Zealand
+    email: joseph.bulbulia@vuw.ac.nz
+affiliation:
+  - id: 1
+    institution: Victoria University of Wellington, New Zealand
 execute:
   warning: false
   echo: false
 citation: true
+date: 2022-11-01
+date-format: short
 bibliography: references.bib
 ---
 
@@ -14,7 +25,7 @@ library(katex)
 
 ## Causal inference
 
-Consider a binary exposure $A$ with two levels, $A = 0$ and $A=1$ and a continuous outcome $Y$.  Estimating the causal effect of $A$ on outcome $Y$ requires contrasting two states of the world.  $Y$ when, perhaps contrary to fact, $A$ is set to 1, or $Y|A=1$, which we write as ${a=1}$,$Y$ and secondly $Y$ when, perhaps contrary to fact, $A$ is set to 0, or $Y|A =1$ which we may write as$Y^{a=0}$. We say that $A$ affects $Y$  when the quantities$Y^{a=1} - Y^{a=0} \neq 0$.   Note that, at any given time, at most only one level of the exposure $A$ may be realised for any individual. That is, $Y^{a=1}$ and $Y^{a=0}$ are never simultaneously observed in any individual.  As such, individual-level causal effects are not typically identifiable from data. It is for this reason that we refer to the $Y^{a=1}$ and $Y^{a=0}$ as "potential" or "counterfactual" outcomes. However, when certain conditions are satisfied we may identify the average or marginal causal effects at the level of groups of individuals who are experience different levels of exposure.  We say there is an average or marginal causal effect if the difference of the averages of the population who are exposed and unexposed does not equal zero:  $E(Y^{a=1}) - E(Y^{a=0})\neq 0$ , or because the difference of the means is equivalent to the mean of the differences, if $E(Y^{a=1} - Y^{a=0})\neq 0$.  This contrast in tje expected average of the *counterfactual* outcomes is the marginal effect. Here, our example uses a binary exposure but we may contrast the counterfactual outcomes for two levels of a continuous exposure. To do this we must state the levels of exposure at which we seek comparisons. 
+Consider a binary exposure $A$ with two levels, $A = 0$ and $A=1$ and a continuous outcome $Y$.  Estimating the causal effect of $A$ on outcome $Y$ requires contrasting two states of the world.  $Y$ when, perhaps contrary to fact, $A$ is set to $1$, or $Y|A=1$, which we write as ${a=1}$,$Y$ and secondly $Y$ when, perhaps contrary to fact, $A$ is set to $0$, or $Y|A =1$ which we may write as$Y^{a=0}$. We say that $A$ affects $Y$  when the quantities$Y^{a=1} - Y^{a=0} \neq 0$.   Note that, at any given time, at most only one level of the exposure $A$ may be realised for any individual. That is, $Y^{a=1}$ and $Y^{a=0}$ are never simultaneously observed in any individual.  As such, individual-level causal effects are not typically identifiable from data. It is for this reason that we refer to the $Y^{a=1}$ and $Y^{a=0}$ as "potential" or "counterfactual" outcomes. However, when certain conditions are satisfied we may identify the average or marginal causal effects at the level of groups of individuals who are experience different levels of exposure.  We say there is an average or marginal causal effect if the difference of the averages of the population who are exposed and unexposed does not equal zero:  $E(Y^{a=1}) - E(Y^{a=0})\neq 0$ , or because the difference of the means is equivalent to the mean of the differences, if $E(Y^{a=1} - Y^{a=0})\neq 0$.  This contrast in tje expected average of the *counterfactual* outcomes is the marginal effect. Here, our example uses a binary exposure but we may contrast the counterfactual outcomes for two levels of a continuous exposure. To do this we must state the levels of exposure at which we seek comparisons. 
 
 Crtitically, to ensure valid inference, we need to ensure that the potential outcomes are independent of the exposures received, namely: 
 
@@ -65,3 +76,6 @@ $$\hat{ATE} = \hat{E}[\hat{E}(Y|A = a, \boldsymbol{L}) - \hat{E}(Y|A = a*, \bold
 5.  Where outcomes are binary, we calculate the causal risk ratio in moving between the different levels of A. Where binary outcomes are more common than 10% we use a log-normal model to calculate a causal rate ratio [@vanderweele2020]. 
 
 6.  The stdReg package in R calculates standard errors using the Delta method from which we construct confidence intervals under asymptotic assumptions[@sjölander2016]. Additionally, we pool uncertainty arising from the multiple imputation procedure by employing Rubin's Rules. 
+
+### Acknowledgements
+"We are grateful to Arvid Sjölander for his help in modifying his stdReg package in R to enable G-computation with multiply-imputed datasets."

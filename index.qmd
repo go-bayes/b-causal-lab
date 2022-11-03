@@ -8,10 +8,9 @@ page-layout: full
 
 
 ```{r, include = FALSE}
-library(here)
+# library(here)
 # GitHub pages
 file.create("docs/.nojekyll", showWarnings = FALSE)
 # Ensure directories exist
 dir.create("data", FALSE)
 ```
-

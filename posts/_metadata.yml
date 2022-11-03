@@ -1,0 +1,28 @@
+# options specified here will apply to all posts in this folder
+
+# freeze computational output
+# (see https://quarto.org/docs/projects/code-execution.html#freeze)
+freeze: true
+
+# Enable banner style title blocks
+title-block-banner: true
+
+# Author name of all blog posts
+# author: 'Joseph Bulbulia'
+#   - name: "Joseph Bulbulia"
+#   - orcid: 0000-0002-5861-2056
+#   - affiliations:
+#      - name: Victoria University of Wellington, New Zealand
+
+# Table of content settings
+toc: true
+toc-depth: 3
+
+page-layout: article
+
+
+execute:
+  echo: false
+  warning: false
+  message: false
+  error: false

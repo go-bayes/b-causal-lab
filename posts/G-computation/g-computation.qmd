@@ -13,7 +13,8 @@ affiliation:
 execute:
   warning: false
   echo: false
-citation: true
+citation:
+  url: https://go-bayes.github.io/b-causal-lab/
 date: 2022-11-01
 date-format: short
 bibliography: references.bib

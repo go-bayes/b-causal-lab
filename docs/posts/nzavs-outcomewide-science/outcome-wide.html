@@ -8,7 +8,7 @@
 
 <meta name="author" content="Joseph Bulbulia">
 
-<title>b-causal-lab people and research - G-computation</title>
+<title>b-causal-lab people and research - Outcome-wide Causal Inference in the NZAVS</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -143,7 +143,7 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">G-computation</h1>
+      <h1 class="title">Outcome-wide Causal Inference in the NZAVS</h1>
                       </div>
   </div>
     
@@ -156,7 +156,7 @@ div.csl-indent {
     </div>
       <div class="quarto-title-meta-contents">
           <p class="affiliation">
-              1
+              Victoria University of Wellington, New Zealand
             </p>
         </div>
       </div>
@@ -167,7 +167,7 @@ div.csl-indent {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">11/1/22</p>
+        <p class="date">11/2/22</p>
       </div>
     </div>
     
@@ -179,18 +179,7 @@ div.csl-indent {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#causal-inference" id="toc-causal-inference" class="nav-link active" data-scroll-target="#causal-inference">Causal inference</a></li>
-  <li><a href="#g-computation-or-standardisation" id="toc-g-computation-or-standardisation" class="nav-link" data-scroll-target="#g-computation-or-standardisation">G-computation (or standardisation)</a></li>
-  <li><a href="#the-steps-for-g-computation" id="toc-the-steps-for-g-computation" class="nav-link" data-scroll-target="#the-steps-for-g-computation">The steps for G-computation</a>
-  <ul class="collapse">
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
-  </ul></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -198,79 +187,44 @@ div.csl-indent {
 
 
 
-<div class="cell">
+<div class="cell" data-layout-align="center" data-hash="outcome-wide_cache/html/tnytx_861b22badfe2f46400ab801b11dae88d">
 
 </div>
-<section id="causal-inference" class="level2">
-<h2 class="anchored" data-anchor-id="causal-inference">Causal inference</h2>
-<p>Consider a binary exposure <span class="math inline">A</span> with two levels, <span class="math inline">A = 0</span> and <span class="math inline">A=1</span> and a continuous outcome <span class="math inline">Y</span>.&nbsp; Estimating the causal effect of <span class="math inline">A</span> on outcome <span class="math inline">Y</span> requires contrasting two states of the world.&nbsp; <span class="math inline">Y</span> when, perhaps contrary to fact, <span class="math inline">A</span> is set to <span class="math inline">1</span>, or <span class="math inline">Y|A=1</span>, which we write as <span class="math inline">{a=1}</span>,<span class="math inline">Y</span> and secondly <span class="math inline">Y</span> when, perhaps contrary to fact, <span class="math inline">A</span> is set to <span class="math inline">0</span>, or <span class="math inline">Y|A =1</span> which we may write as<span class="math inline">Y^{a=0}</span>. We say that <span class="math inline">A</span> affects <span class="math inline">Y</span>&nbsp; when the quantities<span class="math inline">Y^{a=1} - Y^{a=0} \neq 0</span>. &nbsp; Note that, at any given time, at most only one level of the exposure <span class="math inline">A</span> may be realised for any individual. That is, <span class="math inline">Y^{a=1}</span> and <span class="math inline">Y^{a=0}</span> are never simultaneously observed in any individual.&nbsp; As such, individual-level causal effects are not typically identifiable from data. It is for this reason that we refer to the <span class="math inline">Y^{a=1}</span> and <span class="math inline">Y^{a=0}</span> as “potential” or “counterfactual” outcomes. However, when certain conditions are satisfied we may identify the average or marginal causal effects at the level of groups of individuals who are experience different levels of exposure.&nbsp; We say there is an average or marginal causal effect if the difference of the averages of the population who are exposed and unexposed does not equal zero:&nbsp; <span class="math inline">E(Y^{a=1}) - E(Y^{a=0})\neq 0</span> , or because the difference of the means is equivalent to the mean of the differences, if <span class="math inline">E(Y^{a=1} - Y^{a=0})\neq 0</span>.&nbsp; This contrast in tje expected average of the <em>counterfactual</em> outcomes is the marginal effect. Here, our example uses a binary exposure but we may contrast the counterfactual outcomes for two levels of a continuous exposure. To do this we must state the levels of exposure at which we seek comparisons.&nbsp;</p>
-<p>Crtitically, to ensure valid inference, we need to ensure that the potential outcomes are independent of the exposures received, namely:&nbsp;</p>
-<p><span class="math display">Y^a&nbsp; \perp\!\!\!\perp A|L</span></p>
-<p><strong>Or equivalently:</strong></p>
-<p><span class="math display">A \perp\!\!\!\perp Y^a |L</span></p>
-<p>If we have have only observational data, we cannot generally ensure that the exposures are independent of the counterfactual outcomes. For this reason, we use sensitivity analyis such at the calculating an <em>E-value</em> to assess the robustness of any result to unmeasured confounding <span class="citation" data-cites="vanderweele2017">(<a href="#ref-vanderweele2017" role="doc-biblioref">VanderWeele and Ding 2017</a>)</span>.</p>
-</section>
-<section id="g-computation-or-standardisation" class="level2">
-<h2 class="anchored" data-anchor-id="g-computation-or-standardisation">G-computation (or standardisation)</h2>
-<p>To consistently estimate a causal association from the statistical association evident in the data, we must infer the average outcomes for the entire population was it subject to different levels of the exposure variable <span class="math inline">A = a, A=a*</span>.&nbsp;</p>
-<p><strong>If we&nbsp; are interested in obtaining an average causal effect for the population.</strong></p>
-<p><span class="math display">ATE = E[Y^{a*}] - E[Y^a] = </span></p>
-<p><span class="math display">\sum_l E[Y|A=a*, L=k=l]\Pr[L=l] - \sum_c E[Y|A=a, L=l]\Pr[L=l]</span></p>
-<p>We need not estimate <span class="math inline">\Pr(L = l)</span>. Rather we may obtain the weighted mean for the distribution of the counfounders in the data by taking the double expectation :<a href="https://paperpile.com/c/9vawcQ/uD7I/?locator=166">(Hernán, MA, Robins JM 2020, page 166)</a>.</p>
-<p><br>
-</p>
-<p><span class="math display">ATE = E[E(Y|A = a, \boldsymbol{L}) - E(Y|A = a*, \boldsymbol{L})]</span></p>
-<p>To obtain marginal contrasts for the expected outcomes for the entire population solitary worship to different levels of&nbsp; congregations size&nbsp; used the stdReg package in R <a href="https://paperpile.com/c/9vawcQ/8bgN">(Sjölander 2016)</a>.&nbsp;</p>
-</section>
-<section id="the-steps-for-g-computation" class="level2">
-<h2 class="anchored" data-anchor-id="the-steps-for-g-computation">The steps for G-computation</h2>
-<ol type="1">
-<li>First we fit a regression for each outcome on the exposure <span class="math inline">A\_{t0}</span> and baseline covariates<span class="math inline">\boldsymbol{L} = (L_1, L_2,L_3 \dots L_n)</span>. To avoid implausible assumptions of linearity we model the relationship between the exposure each of the potential outcomes of interest using a cubic spline.&nbsp; We include in the set of baseline confounders <span class="math inline">\boldsymbol{L}</span> the baseline measure of the exposure as well as the baseline response (or responses): <span class="math inline">\{A\_{t-1}, \boldsymbol{Y_{t-1}} = (Y_{1, t-1}, Y_{2, t-1}, Y_{3, t-1}\dots Y_{n, t-1})\}&nbsp;\subset \boldsymbol{L}</span>.&nbsp;&nbsp;</li>
-</ol>
-<p>This model give us <span class="math inline">E(Y|A, \boldsymbol{L})</span></p>
-<ol start="2" type="1">
-<li>Second, we use the model in (1) to predict the values of a potential outcome <span class="math inline">Y^{a}</span> by setting the exposure to the value <span class="math inline">A = a</span>.</li>
-</ol>
-<p>This model gives us <span class="math inline">\hat{E}(Y|A = a, \boldsymbol{L})</span></p>
-<ol start="3" type="1">
-<li>Third, we use the model in (1) to predict the values of a different potential outcome <span class="math inline">Y^{a*}</span>by setting the exposure to a different value of <span class="math inline">A =a^{\star}</span>.</li>
-</ol>
-<p>This model gives us&nbsp; <span class="math inline">\hat{E}(Y|A = a*,\boldsymbol{L})</span></p>
-<ol start="4" type="1">
-<li>Forth we obtain the focal contrast as the expected difference in the expected average outcomes when exposure&nbsp;at levels <span class="math inline">a*</span> and <span class="math inline">a</span>. Where outcomes are continuous we calculate both mean of <span class="math inline">Y^a</span> and the mean of&nbsp; <span class="math inline">Y^{a*}</span> and then obtain their difference.&nbsp; This gives give us:&nbsp;</li>
-</ol>
-<p><span class="math display">\hat{ATE} = \hat{E}[\hat{E}(Y|A = a, \boldsymbol{L}) - \hat{E}(Y|A = a*, \boldsymbol{L})]</span></p>
-<ol start="5" type="1">
-<li><p>Where outcomes are binary, we calculate the causal risk ratio in moving between the different levels of A. Where binary outcomes are more common than 10% we use a log-normal model to calculate a causal rate ratio <span class="citation" data-cites="vanderweele2020">(<a href="#ref-vanderweele2020" role="doc-biblioref">VanderWeele, Mathur, and Chen 2020</a>)</span>.&nbsp;</p></li>
-<li><p>The stdReg package in R calculates standard errors using the Delta method from which we construct confidence intervals under asymptotic assumptions<span class="citation" data-cites="sjölander2016">(<a href="#ref-sjölander2016" role="doc-biblioref">Sjölander 2016</a>)</span>. Additionally, we pool uncertainty arising from the multiple imputation procedure by employing Rubin’s Rules.&nbsp;</p></li>
-</ol>
-<section id="acknowledgements" class="level3">
-<h3 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h3>
-<p>“We are grateful to Arvid Sjölander for his help in modifying his stdReg package in R to enable G-computation with multiply-imputed datasets.”</p>
+<div class="cell" data-layout-align="center" data-hash="outcome-wide_cache/html/unnamed-chunk-1_43a01c387a7b0666982aa1aa173bcc76">
+
+</div>
+<p>Confounding occurs when the statistical association between indicators in the data do not reflect a causal association between parameters in a target population. A causal graph is a qualitative tool that enables us to quickly inspect sources of confounding.</p>
+<p>We may represent our strategy for confounding control using the causal graph presented in Figure 1.</p>
+<p>We define an exposure or treatment by $A$. We define <span class="math inline">\boldsymbol{Y}</span> as the set of all well-being outcomes contained in the NZAVS. Our interest is in consistently estimating the causal effect of congregation size on each of these outcomes. To consistently estimate the causal effect of an exposure <span class="math inline">A=1</span> on the vector of well-being outcomes <span class="math inline">\boldsymbol{Y}</span> we must ensure that we have included a set of confounders that will prevent any statistical association between <span class="math inline">A</span> and <span class="math inline">Y</span> in the absence of causation. A statistical association in the absence of a causal association may arise in one of three ways.: (1) <span class="math inline">A</span> and <span class="math inline">Y</span> share a common cause. (2) <span class="math inline">A</span> and <span class="math inline">Y</span> share a common effect. (3) There is confounding by descent, such that conditioning on a confounder introduces a statistical association between <span class="math inline">A</span> and <span class="math inline">Y</span> in the absence of a casual association (collider bias).</p>
+<p>To address challenge (1) we may condition or stratify on all measured common causes of <span class="math inline">A</span> and <span class="math inline">Y</span>. To address challenges (2) and (3), we must not condition on any effect or desendent of an effect. Note however that by conditioning on a descent of a common cause we may at least partially address conditioning by a common cause. This is because conditioning on the effect of a common cause may itself partially block the effect of the that common cause.</p>
+<p>Here, we use a modified version of VanderWeele et al’s approach to estimate causal effects using three waves of NZAVS panel data <span class="citation" data-cites="vanderweele2020">(<a href="#ref-vanderweele2020" role="doc-biblioref">VanderWeele, Mathur, and Chen 2020</a>)</span>.</p>
+<p>Call <span class="math inline">t-1</span> the baseline wave, <span class="math inline">t_0</span> the exposure wave, and <span class="math inline">t+1</span> the outcome measurement wave. First, we include at baseline indicators of all past outcomes <span class="math inline">\boldsymbol{Y}_{t-1}</span><em>. Second, we include at baseline an indicator for the past exposure</em> <span class="math inline">A_{t-1}</span>. Third, we include a rich set of baseline confounders <span class="math inline">\boldsymbol{L_{t-1}}</span>. Of course, we cannot ensure that this strategy is sufficient to ensure no unmeasured confounding. However, on On VanderWeele’s strategy, for any unmeasured confounder to affect both the exposure/outcome association, it would need to do so independently of its effects on prior measurements of the exposure and (all) outcomes at baseline, in addition to all measured baseline confounders. Note also that by controlling for measured confounders the wave prior to exposure we avoid unwittingly conditioning on an effects of the exposure that subsequently affects the outcome – mediator bias. Note furthermore that by measuring the outcome in the year following the exposure, <span class="math inline">Y_{t+1}</span>, we ensure that the exposure temporally precedes the outcome, and is not, for example, an effect of the outcome. Finally, loss-to-follow-up or attrition, as well as survey non-response may introduce selection bias (represented by the boxed <span class="math inline">S_{t+1}</span>). There are several ways in which uch selection bias may introduce confounding. In Figure 1, we note the prospect in which a novel common cause of <span class="math inline">A</span> and <span class="math inline">Y</span> called <span class="math inline">U_s</span> may lead to a spurious association between <span class="math inline">A</span> and <span class="math inline">Y</span> if <span class="math inline">S</span> is a collider of <span class="math inline">A</span> and <span class="math inline">U_s</span>. To avoid selection bias we multiply impute the missing responses.</p>
+<div class="cell" data-layout-align="center" data-engine.opts="{&quot;template&quot;:&quot;tikz-template-2.tex&quot;,&quot;dvisvgm.opts&quot;:&quot;--font-format=woff&quot;}" data-hash="outcome-wide_cache/html/unnamed-chunk-2_52d6f952263fed957effa3bc1a8af44e">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="outcome-wide_files/figure-html/unnamed-chunk-2-1.svg" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 
-</section>
-</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
-<div id="ref-sjölander2016" class="csl-entry" role="doc-biblioentry">
-Sjölander, Arvid. 2016. <span>“Regression Standardization with the R Package stdReg.”</span> <em>European Journal of Epidemiology</em> 31 (6): 563–74. <a href="https://doi.org/10.1007/s10654-016-0157-3">https://doi.org/10.1007/s10654-016-0157-3</a>.
-</div>
-<div id="ref-vanderweele2017" class="csl-entry" role="doc-biblioentry">
-VanderWeele, Tyler J, and Peng Ding. 2017. <span>“Sensitivity Analysis in Observational Research: Introducing the e-Value.”</span> <em>Annals of Internal Medicine</em> 167 (4): 268274.
-</div>
 <div id="ref-vanderweele2020" class="csl-entry" role="doc-biblioentry">
 VanderWeele, Tyler J, Maya B Mathur, and Ying Chen. 2020. <span>“Outcome-Wide Longitudinal Designs for Causal Inference: A New Template for Empirical Studies.”</span> <em>Statistical Science</em> 35 (3): 437466.
 </div>
 </div></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div quarto-reuse="quarto-reuse" class="quarto-appendix-contents"><div>CC BY-NC-SA</div></div></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bulbulia2022,
   author = {Joseph Bulbulia},
-  title = {G-Computation},
-  date = {2022-11-01},
+  title = {Outcome-Wide {Causal} {Inference} in the {NZAVS}},
+  date = {2022-11-02},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bulbulia2022" class="csl-entry quarto-appendix-citeas" role="doc-biblioentry">
-Joseph Bulbulia. 2022. <span>“G-Computation.”</span> November 1, 2022.
+Joseph Bulbulia. 2022. <span>“Outcome-Wide Causal Inference in the
+NZAVS.”</span> November 2, 2022.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

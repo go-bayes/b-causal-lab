@@ -23,41 +23,38 @@ execute:
 
 ## Introduction
 
-Religion spans the full bandwidth of human diversity. Despite this diversity, nearly all religions agree that greatest goods in life come from virtuous living. Indeed, in classical Christian thought, religion itself is a virtue. Religion consists of acts and prayers that appropriately acknowledge God as the source of our existence and continuance [@aquinas1702].
+Religions spans the bandwidth of human diversity. Despite their differences, nearly all religions agree that greatest goods in life come from virtuous living. Moreover, in classical Christian thought, religion itself is a virtue. Religion consists of acts and prayers that appropriately acknowledge God as the source of our existence and continuance [@aquinas1702].
 
-If the cultivation of virtue, including the virtue of religion, indeed makes life good, then in theory the effects virtuous living should be observable. If such effects are observable, then in theory they should be measurable. If the effects of virtuous living are measurable, then in theory, such effects should be amenable to scientific study.
+If the cultivation of virtue, including the virtue of religion, indeed makes life good, and the good in life is apparent, then, in theory, the causes and consequences of virtue should be amenable to scientific study.
 
 This article has three objectives.
 
-First, I consider credible objections to the proposition that virtue, including the virtue of religion, can form the object of scientific study.
+First, I consider credible objections that the causes and consequences of virtuous living cannot form the object of scientific study.
 
-Second, I consider a pragmatic argument for the scientific study of virtue as interesting despite the credible objections raised against it. Here, I describe an approach that leverages the repeated measurement of individuals in large national cohort studies over the course of their lifespans. This approach belongs to what Tyler VanderWeele calls outcomewide longitudinal flourishing science [@vanderweele2020].
+Second, I motivate a pragmatic position that accepts the credible objections against a scientific study of virtue but which nevertheless allows that, when appropriately bounded, a scientific study of virtue may prove interesting and even edifying. Here, I describe an approach that leverages the repeated measurement of individuals in large national cohort studies over the course of their lifespans. This approach belongs to what Tyler VanderWeele calls "outcome-wide longitudinal flourishing science" [@vanderweele2020]. I focus on outcome-wide longitudinal psychology because it is what I use in my research as a member of the senior leadership team for the New Zealand Attitudes and Values Study ([NZAVS](https://www.psych.auckland.ac.nz/en/about/new-zealand-attitudes-and-values-study.html)).
 
-Finally, I consider three audiences for whom the scientific study of virtue might be interesting: (1) human scientists; (2) theologians; (3) teachers and clergy.
+Finally, I consider three different audiences for whom the scientific study of virtue, in the form of outcome-wide longitudinal flourishing science, might prove interesting and edifying: (1) human scientists; (2) theologians; (3) teachers and clergy.
 
-Here, I restrict focus to the psychological science of virtue. There are, of course, other sciences that may be relevant, such as economics, sociology, and archaeology. It is an open question whether consideration of challenges and opportunities of a psychological science of virtue generalise to other scientific domains. At any rate, the field about which I am most familiar.
+## Objections to virtue science
 
-## Objections to measuring virtue
-
-Consider the following credible objections to a psychological science of virtue.
+Consider the following credible objections against a psychological science of virtue.
 
 Psychological scientists study how people think and behave. However, in classical philosophical and religious reflection, virtue is conceived of as a skill, and the expression of a virtue is subject both to deficiencies and excesses. For example, Aristotle held that the deficiency of courage is cowardice and the excess of courage is rashness; the deficiency of temperance is indulgence and the excess of temperance is insensibility. Notably, to judge a behavior as virtuous or vicious would appear to require that one possesses the relevant virtue. Here we may draw an analogy to music. To assess the quality of a jazz musician requires competence in the genre. Although we may study jazz from a behavioral or cognitive perspective such a study would not carry us to an appreciation of excellence in the genre. Similarly, it is unclear how the study of human thought and behaviour would carry us to an appreciation of moral excellence. Which thoughts and behaviours should form the topic of the interest? What should one consider when measuring these thoughts and behaviours? What are the marks of virtue? How is such virtue to be distinguished from vice?
 
 A second, related challenge to the psychological science of virtue is practical, namely that virtue pertains to experiences which may be poorly represented in human language. In the **Varieties of Religious Experience**, William James writes, "Philosophy lives in words, but truth and fact well up into our lives in ways that exceed verbal formulation. There is in the living act of perception always something that glimmers and twinkles and will not be caught, and for which reflection comes too late" [@james1902, pp.456-457]. Even if we could recognise virtue when we perceive it, how might we speak of it? Consider again the analogy to jazz music. A complete behavioural and cognitive explanation of jazz could not arguable substitute an understanding and appreciation of the art form. Similarly, all classical traditions conceive of the cultivation and expression of the virtues as a form of art or skill.
 
-A third credible challenge to a psychological science of virtue relates to the appreciation that psychological science investigates average effects. The idealised "random experiment" is the gold standard of psychological design. We use chance to assign individuals to either a treatment or a control condition, and investigate the average response within each condition. If these responses differ, we say that the treatment has a causal effect. However, the inference pertains to the average response. Within each condition may be those who respond better or worse than average, or who do not respond at all [@bulbulia2022; @hernan2023]. Although the average response is the holy grail of psychological science, teachers and learners of virtue will want to know what works for individuals.
+A third credible challenge to the psychological science of virtue arises from an appreciation that psychological science investigates average effects in a population or sub-population. The gold standard for research design in psychological science is the idealised "random experiment." In such a design, a researcher assigns individuals by chance to either a treatment condition or a control condition, and subsequently investigates the average response across individuals within each condition. If responses differ by condition, we say that the treatment has a causal effect. Notably, the inference one obtains from a randomised experiment pertains to the average response. That is, the experiment summarises causal effects across individuals. As with any average, there will be those individuals who respond better or worse than the average [@bulbulia2022; @hernan2023]. Although the average response is the holy grail of psychological science, teachers and students of virtue typically want to know what works for individuals.
 
 ## Responses to objections
 
-I describe the preceding arguments against a psychological science of virtue as "credible" because I believe them. The psychological science of virtue should begin with a sober appreciation of what the science can deliver.
+I describe the preceding arguments against a psychological science of virtue as "credible" because they are persuasive and we should believe them. The psychological science of virtue must begin with a sober appreciation of what the science cannot deliver. First, they psychological science of virtue cannot substitute for the cultivation of virtue. Second, the psychological science of virtue is limited in the scope of knowledge that it can afford: science too "volleys in vocables." Third, longitudinal psychological science investigates average effects in populations and sub-populations. There is no psychological science of individual-level causes and effects. Teachers and students of virtues should be weary when apply the results of any scientific study of virtue to some practical task. Note that sober restraint in generalising arises in the best-case scenerios when the science correctly estimates population averages. Science is imperfect, and it progresses slowly and incrementally. A healthy falliabilism, too, warrents restraint.  
 
-First, a psychological science of virtue cannot substitute for the cultivation of virtue.
+If these limitations are kept in mind, I believe that the psychological science of virtue can be interesting and indeed edifying. To make this case it will be useful to describe how a psychological science of virtue might work. 
 
-Second, a psychological science of virtue is limited in the scope of knowledge that it can afford.
-
-Third, psychological science investigates average effects across populations and sub-populations. There is no science of individual-level effect. Teachers and learners of virtues should be weary of generalising to individuals.
 
 ## National-scale Panel Studies of Virtue Across the Adult Lifespan
+
+
 
 ## The practical interest of longitudinal virtue science for different audiences
 
@@ -66,3 +63,7 @@ Third, psychological science investigates average effects across populations and
 ### Interest for theologians
 
 ### Interest for teachers and clergy
+
+## Conclusions
+
+## References

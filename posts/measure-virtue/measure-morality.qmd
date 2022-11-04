@@ -23,15 +23,15 @@ execute:
 
 ## Introduction
 
-Religions spans the bandwidth of human diversity. Despite their differences, nearly all religions agree that greatest goods in life come from virtuous living. Moreover, in classical Christian thought, religion itself is a virtue. Religion consists of acts and prayers that appropriately acknowledge God as the source of our existence and continuance [@aquinas1702].
+Religious traditions span the bandwidth of human diversity. Despite their differences, nearly all religious traditions agree that greatest goods in life come from virtuous living. Moreover, in most religious traditions, religion itself is a virtue. For example, in classical Christian thought, religion is a virtue of justice, consisting of acts and prayers, that appropriately acknowledges God as the source of our existence and continuance [@aquinas1702].
 
-If the cultivation of virtue, including the virtue of religion, indeed makes life good, and the good in life is apparent, then, in theory, the causes and consequences of virtue should be amenable to scientific study.
+If the cultivation of virtue, including the virtue of religion, indeed makes life good, and if the good in life is apparent, then in theory the causes and consequences of virtue should be observable and amenable to scientific study.
 
 This article has three objectives.
 
-First, I consider credible objections that the causes and consequences of virtuous living cannot form the object of scientific study.
+First, I consider credible objections to the proposal that the causes and consequences of virtuous living can form the object of scientific study.
 
-Second, I motivate a pragmatic position that accepts the credible objections against a scientific study of virtue but which nevertheless allows that, when appropriately bounded, a scientific study of virtue may prove interesting and even edifying. Here, I describe an approach that leverages the repeated measurement of individuals in large national cohort studies over the course of their lifespans. This approach belongs to what Tyler VanderWeele calls "outcome-wide longitudinal flourishing science" [@vanderweele2020]. I focus on outcome-wide longitudinal psychology because it is what I use in my research as a member of the senior leadership team for the New Zealand Attitudes and Values Study ([NZAVS](https://www.psych.auckland.ac.nz/en/about/new-zealand-attitudes-and-values-study.html)).
+Second, I argue for a pragmatic position that accepts the credible objections against a scientific study of virtue and is also open to the possibility that the the scientific study of virtue may prove interesting and even edifying. To motivate this pragmatic position I describe an approach that leverages the repeated measurement of individuals in large national cohort studies over the course of their lifespans. This approach belongs to what Tyler VanderWeele calls "outcome-wide longitudinal flourishing science" [@vanderweele2020]. I focus on outcome-wide longitudinal psychology because it is what I use in my research as a member of the senior leadership team for the New Zealand Attitudes and Values Study ([NZAVS](https://www.psych.auckland.ac.nz/en/about/new-zealand-attitudes-and-values-study.html)). There might, of course, be other forms of science that are interesting and edifying. I describe outcome-wide longitudinal science because I know its strengths and limitations.
 
 Finally, I consider three different audiences for whom the scientific study of virtue, in the form of outcome-wide longitudinal flourishing science, might prove interesting and edifying: (1) human scientists; (2) theologians; (3) teachers and clergy.
 

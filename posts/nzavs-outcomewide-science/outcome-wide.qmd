@@ -37,6 +37,7 @@ if (Sys.info()[["sysname"]] == "Darwin" && Sys.info()[["machine"]] == "arm64") {
   Sys.setenv(LIBGS = "/opt/homebrew/Cellar/ghostscript/10.0.0/lib/libgs.dylib")
 }
 ```
+
 ```{r tnytx, eval=FALSE}
 #install.packages("tinytex")
 #tinytex::install_tinytex()

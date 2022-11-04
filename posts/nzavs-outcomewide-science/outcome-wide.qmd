@@ -11,7 +11,8 @@ title-block-style: plain
 bibliography: references.bib
 date: 2022-11-02
 date-format: short
-citation: true
+citation:
+  url: https://go-bayes.github.io/b-causal-lab/
 execute:
   echo: false
   warning: false

@@ -2,6 +2,8 @@
 title: "About"
 ---
 
-This website describes *DRAFT* research from the B-causal Lab. 
+This website mostly describes *DRAFT* research from the B-causal Lab. 
+
+Completed work will be identified as such.
 
 

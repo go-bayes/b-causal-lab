@@ -4,7 +4,7 @@ project:
 toc: true
 
 website:
-  title: "b-causal-lab people and research"
+  title: "b-causal-lab draft research"
   navbar:
     left:
       - href: index.qmd

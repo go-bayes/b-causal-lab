@@ -1,0 +1,1233 @@
+---
+title: "Religious Descrimination and Religious Identification: Unpacking Causality Using National Panel Data"
+author: 
+  - name: Joseph Bulbulia
+    orcid: 0000-0002-5861-2056
+    affiliation: Victoria University of Wellington,  New Zealand
+    corresponding: yes
+    address: Victoria University of Wellington, New Zealand
+    email: joseph.bulbulia@vuw.ac.nz
+    role:
+      - corresponding author
+  - name: Chris G. Sibley
+    orcid: 0000-0002-4064-8800
+    affiliation: University of Auckland
+    address: University of Auckland, Psychology 
+    role:
+      - co-author
+
+format: html
+title-block-style: plain
+bibliography: references.bib
+date: 2022-11-02
+date-format: short
+citation: true
+execute:
+  echo: false
+  warning: false
+  message: false
+  error: false
+---
+
+
+## Overview
+
+We have three interests.
+
+First, we leverage data from a national longitudinal study in New Zealand to describe trends in self-reported perceptions of anti-religious prejudice in New Zealand during the years 2015-2022.
+
+Second, we leverage time-series data to identify whether it is religious commitment that is responsible for perceptions prejudice or some third factor. That is, leverage time-series data to identify causality.
+
+Third, we briefly speculate about the relevance of these findings to different audiences.
+
+## Method
+
+## Results
+
+
+```{r}
+#| label: load-packages
+#| include: false
+options(scipen = 999)
+# function for installing dependencies
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+# usage
+packages <- c("tidyverse",
+              "remotes",
+              "devtools",
+              "janitor",
+              "here",
+              "purrr",
+              "ggplot2",
+              "stdReg",
+              "mice",
+              "miceadds",
+              "Amelia",
+              "conflicted",
+              "naniar",
+              "skimr",
+              "marginaleffects",
+              "splines",
+             # "CMAverse",
+             # "gghighlight",
+              "formula.tools",
+              "ggpubr",
+              "lme4",
+             # "rstan",
+            #  "cmdstanr",
+              "geepack",
+              #"brms",
+              "ggokabeito",
+              "table1",
+              "kableExtra",
+              "parameters",
+              "lubridate",
+              "patchwork",
+              "lubridate",
+              "tidyr",
+            "ggeffects")
+ipak(packages)
+
+
+# next install rethinking
+# if (!require(rethinking)) {
+#   devtools::install_github("rmcelreath/rethinking")
+# }
+
+if (!require(CMAverse)) {
+  devtools::install_github("BS1125/CMAverse")
+}
+
+# install.packages("remotes")
+
+# if (!require(cmdstanr)) {
+#  remotes::install_github("stan-dev/cmdstanr")
+#  install_cmdstan() 
+# }
+```
+
+```{r}
+# libraries and functions
+# read libraries
+source("https://raw.githubusercontent.com/go-bayes/templates/main/functions/libs2.R")
+
+# read functions
+source("https://raw.githubusercontent.com/go-bayes/templates/main/functions/funs.R")
+
+# for saving models  # ONLY FOR JOSEPH BULUBLIA -- SET TO YOUR PREFERRED FOLDERS
+push_mods <-
+  fs::path_expand("~/The\ Virtues\ Project\ Dropbox/outcomewide/mods")
+push_figs <-
+  fs::path_expand("~/Users/joseph/The\ Virtues\ Project\ Dropbox/outcomewide/figs")
+
+# read data # ONLY FOR JOSEPH BULUBLIA
+pull_path <-
+  fs::path_expand(
+    "~/The\ Virtues\ Project\ Dropbox/Joseph\ Bulbulia/00Bulbulia\ Pubs/2021/DATA/ldf.5"
+  )
+dat <- readRDS(pull_path)
+```
+
+```{r}
+#| label: prep-16
+#| include: false
+
+dt_16 <- dat |>
+  dplyr::mutate(Gender3 = as.factor(ifelse(
+    GendAll == 0,
+    "Female",
+    if_else(GendAll == 1, "Male", "GenderDiverse")
+  )))  |>
+  dplyr::select(
+    Id,
+    Wave,
+    CONSCIENTIOUSNESS,
+    OPENNESS,
+    HONESTY_HUMILITY,
+    EXTRAVERSION,
+    NEUROTICISM,
+    AGREEABLENESS,
+    KESSLER6sum,
+    PWI,
+    Age,
+    Gender3,
+    EthCat,
+    Employed,
+    Household.INC,
+    BornNZ,
+    Relid,
+    Religion.Church,
+    Spiritual.Identification,
+    Perc.Religious.Discrim,
+   #  ChildrenNum,
+    BELONG,
+    SUPPORT,
+    Urban,
+    Edu,
+    Pol.Orient,
+    SDO,
+    RWA,
+    NZSEI13,
+    NZdep,
+    Religious,
+    # GenCohort,
+    Urban,
+    TSCORE,
+    Partner,
+    Parent,
+    # LIFESAT,
+    # SFHEALTH,
+    # HLTH.BMI,
+    # Your.Future.Security,
+    # Your.Personal.Relationships,
+    # Your.Health,
+    # Standard.Living,
+    # CharityDonate,
+    # HoursCharity,
+    Hours.Work,
+    # HLTH.SleepHours,
+   # HLTH.Disability,
+   # Hours.Exercise,
+   TSCORE,
+   YearMeasured
+  ) %>%
+  dplyr::mutate(Edu = as.numeric(Edu)) %>%
+  dplyr::filter(Wave == 2016 |
+                  Wave == 2017 |
+                  Wave == 2018 | Wave == 2019 | Wave == 2020| Wave == 2021) %>%
+  dplyr::filter(YearMeasured != -1) %>% # remove people who passed away
+  droplevels()%>%
+  dplyr::mutate(org2016 =  ifelse(Wave == 2016 &
+                                    YearMeasured == 1, 1, 0)) %>%
+  group_by(Id) %>%
+  dplyr::mutate(hold = mean(org2016, na.rm = TRUE)) %>%  # Hack
+  filter(hold > 0) %>% # hack to enable repeate of baseline in 2019
+  ungroup(Id) %>%
+  dplyr::mutate(Edu = as.numeric(Edu)) %>%
+  arrange(Id, Wave) %>%
+  dplyr::mutate(Church = ifelse(Religion.Church > 8, 8, Religion.Church)) %>%
+  group_by(Id) %>%
+  dplyr::mutate(TSCORE_b = ifelse(Wave == "2016", (TSCORE), NA_real_)) %>%
+  fill(TSCORE_b) %>%
+  # dplyr::mutate(TSCORE_i = ifelse(
+  #   YearMeasured == 0 & Wave == 2017,
+  #   TSCORE_b + 365,
+  #   ifelse(
+  #     YearMeasured == 0 & Wave == 2018,
+  #     TSCORE_b + 730,
+  #     ifelse(
+  #       YearMeasured == 0 & Wave == 2019,
+  #       TSCORE_b + 1094,
+  #       # leap
+  #       ifelse(YearMeasured == 0 &
+  #                Wave == 2020, TSCORE_b + 1459, TSCORE)
+  #     )
+  #   )
+  # )) %>%
+  #group_by(Id) %>%
+ # dplyr::mutate(dys = (TSCORE_i - min(TSCORE_i))) %>%
+ # dplyr::mutate(yrs =  (dys / 365)) %>%
+ #  dplyr::mutate(wave = as.numeric(Wave) - 1) %>%
+ # dplyr::mutate( Perc.Religious.Discrim_b= if_else(Wave == "2016", (Perc.Religious.Discrim), NA_real_)) %>%
+ #  fill(Perc.Religious.Discrim_b) %>%
+ #  dplyr::mutate( Relid_b= if_else(Wave == "2016", (Relid), NA_real_)) %>%
+ #  fill(Relid_b) %>%
+ #  dplyr::mutate( Spiritual.Identification_b= if_else(Wave == "2016", (Spiritual.Identification), NA_real_)) %>%
+ #  fill(Spiritual.Identification_b) %>%
+ #  dplyr::mutate( CONSCIENTIOUSNESS_b= if_else(Wave == "2016", (CONSCIENTIOUSNESS), NA_real_)) %>%
+ #  fill(CONSCIENTIOUSNESS_b) %>%
+ #    dplyr::mutate( OPENNESS_b= if_else(Wave == "2016", (OPENNESS), NA_real_)) %>%
+ #  fill(OPENNESS_b) %>%
+ #    dplyr::mutate( HONESTY_HUMILITY_b= if_else(Wave == "2016", (HONESTY_HUMILITY), NA_real_)) %>%
+ #  fill(HONESTY_HUMILITY_b) %>%
+ #    dplyr::mutate( NEUROTICISM_b= if_else(Wave == "2016", (NEUROTICISM), NA_real_)) %>%
+ #  fill(NEUROTICISM_b) %>%
+ #    dplyr::mutate( EXTRAVERSION_b= if_else(Wave == "2016", (EXTRAVERSION), NA_real_)) %>%
+ #  fill(EXTRAVERSION_b) %>%
+ #    dplyr::mutate( AGREEABLENESS_b= if_else(Wave == "2016", (AGREEABLENESS), NA_real_)) %>%
+ #  fill(AGREEABLENESS_b) %>%
+ #    dplyr::mutate( KESSLER6sum_b= if_else(Wave == "2016", (KESSLER6sum), NA_real_)) %>%
+ #  fill(KESSLER6sum_b) %>%
+ #     dplyr::mutate( PWI_b= if_else(Wave == "2016", (PWI), NA_real_)) %>%
+ #  fill(PWI_b) %>%
+ #  dplyr::mutate(Pol.Orient_b = if_else(Wave == "2016", (Pol.Orient), NA_real_)) %>%
+ #  fill(Pol.Orient_b) %>%
+ #  dplyr::mutate(Religious_b = if_else(Wave == "2016", (as.numeric(Religious)), NA_real_)) %>%
+ #  fill(Religious_b) %>%
+ #  dplyr::mutate(Partner_b = if_else(Wave == "2016", (as.numeric(Partner)), NA_real_)) %>%
+ #  fill(Partner_b) %>%
+ #  dplyr::mutate(Parent_b = if_else(Wave == "2016", (as.numeric(Parent)), NA_real_)) %>%
+ #  fill(Parent_b) %>%
+ #  dplyr::mutate(Age_b = if_else(Wave == "2016", (Age), NA_real_)) %>%
+ #  fill(Age_b) %>%
+ #  dplyr::mutate(NZdep_b = if_else(Wave == "2016", (NZdep), NA_real_)) %>%
+ #  fill(NZdep_b) %>%
+ #  dplyr::mutate(Gender3_bz = if_else(Wave == "2016", (as.numeric(Gender3)) / 2, NA_real_)) %>%
+ #  fill(Gender3_bz) %>%
+ #  dplyr::mutate(Employed_b = if_else(Wave == "2016", (as.numeric(Employed)), NA_real_)) %>%
+ #  fill(Employed_b) %>%
+ #  dplyr::mutate(Edu_b = if_else(Wave == "2016", (Edu), NA_real_)) %>%
+ #  fill(Edu_b) %>%
+ #  dplyr::mutate(Urban_b = if_else(Wave == "2016", (as.numeric(Urban)), NA_real_)) %>%
+ #  fill(Urban_b) %>%
+ #  dplyr::mutate(EthCat_b = if_else(Wave == "2016", as.numeric(EthCat), NA_real_)) %>%
+ #  fill(EthCat_b) %>%
+ #  dplyr::mutate(EthCat_b, as.factor(EthCat_b)) %>%
+ #  ungroup() %>%
+  arrange(Id, Wave) |>
+  dplyr::mutate(wave = as.numeric(Wave) - 1) |>
+  ungroup() |>
+  arrange(Id, Wave)
+
+levels(dt_16$Wave) <-
+  c("Time8", "Time9", "Time10", "Time11", "Time12", "Time13")
+
+dat |> 
+  filter(YearMeasured==1 & 
+           (Wave == 2018 |
+           Wave == 2019 |
+           Wave == 2020 | 
+           Wave == 2021) )|> 
+  group_by(Wave) |> 
+  summarise(n = n_distinct(Id)) |> 
+  kbl() |> kable_classic_2(full_width = F)
+```
+
+```{r}
+#| label: timeline-16
+#| include: false
+dt_timeline16  <- dt_16 %>%
+  mutate(ReligiousID = as.factor(round(Relid,0))) |> 
+  select(Perc.Religious.Discrim,
+         TSCORE,
+         ReligiousID,
+         Spiritual.Identification, 
+         Church,
+         Relid,
+         Id) %>%
+  dplyr::mutate(timeline = make_date(year = 2009, month = 6, day = 30) + TSCORE) %>%
+  dplyr::filter(timeline > "2016-06-06") %>%
+  # dplyr:::count(day = floor_date(timeline, "day"))%>%
+  # dplyr::mutate(Attack_Condition = factor(
+  #   ifelse(timeline < "2019-03-15", 0, 1),
+  #   labels = c("Pre-Attack", "Post-attack")
+  # )) %>%
+  arrange(timeline)
+
+N_2 <- length(unique(dt_timeline16$Id))
+```
+
+```{r}
+#| label: tab-dis
+#| echo: false
+library(table1)
+x <- table1::table1(~ Perc.Religious.Discrim|Wave, data = dt_16, overall = FALSE)
+#x <- table1::table1(~ Spiritual.Identification|Wave, data = dt_16, overall = FALSE)
+
+t1kable(x, booktabs = FALSE,  format = "markdown")
+```
+
+```{r}
+#| label: fig-rel-16
+#| echo: false
+#| fig-cap: "Religious and Spiritual Change in Time 2016 Cohort."
+#| fig-subcap:
+#|   - "Change in Religious Identification"
+#|   - "Change in Spiritual Identification"
+#| layout-ncol: 2
+
+
+####| column: page
+ggplot(dt_timeline16, aes(x = timeline, y = Relid)) +
+  geom_jitter(alpha = .01, width = 1) +
+  stat_smooth(method = "lm") +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "Level of Religiousity Years 2016 - 2022",
+    subtlite = "N = 62,621 New Zealanders (NZAVS)",
+    # subtitle = "Strong & apparently growing increase in acceptace after attacks",
+    y = "Level of Religiousity (0-7)",
+    x = "NZAVS Time 8 - 13 (2016-2022)"
+  )  + theme_classic()
+
+ggplot(dt_timeline16, aes(x = timeline, y = Spiritual.Identification)) +
+  geom_jitter(alpha = .01, width = 1) +
+  stat_smooth(method = "lm") +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "Level of Spiritual Identification Years 2016 - 2022",
+    subtlite = "N = 62,621 New Zealanders (NZAVS)",
+    # subtitle = "Strong & apparently growing increase in acceptace after attacks",
+    y = "Level of Spiritual Identification (0-7)",
+    x = "NZAVS Time 8 - 13 (2016-2022)"
+  ) + theme_classic()
+```
+
+```{r}
+#| label: fig-dis-16
+#| fig-cap: "Perceived Religious/Spiritual Discrimination in the Time 2016 NZAVS Cohort."
+#| echo: false
+ggplot(dt_timeline16, aes(x = timeline, y = Perc.Religious.Discrim, color = ReligiousID)) +
+  geom_jitter(alpha = .01, width = 1) +
+  stat_smooth(method = "lm") +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "Perceived Religious/Spiritual Discrimination Years 2016 - 2022",
+    subtlite = "N = 62,621 New Zealanders (NZAVS)",
+    # subtitle = "Strong & apparently growing increase in acceptace after attacks",
+    y = "Perceived Religious/Spiritual Discrimination (1-7)",
+    x = "NZAVS Time 8 - 13 (2016-2022)"
+  ) +
+  scale_color_viridis_d(alpha = 1) + theme_classic()
+```
+
+```{r}
+#| label: lmer-mod
+#| include: false
+#| eval: false
+m1<- lme4::lmer(Perc.Religious.Discrim ~ Relid * bs(wave) + (1|Id), dat = dt_16)
+parameters::model_parameters(m1) |> 
+  print_md()
+```
+
+```{r}
+#| label: fig-ml-model
+#| eval: false
+library(ggeffects)
+plot(
+  ggeffects::ggpredict(m1, terms = c("wave", "Relid[0,7]"))
+)
+```
+
+```{r}
+#| label: perpare-g-comp-data
+#| include: false
+dt_16b <- dt_16 |> 
+ dplyr::mutate(Edu = as.numeric(Edu)) %>%
+  dplyr::mutate(across(!c(Id, Wave, Gender3), ~ as.numeric(.x))) %>% # make factors numeric for easy of processing
+  arrange(Id, Wave)  %>%
+ dplyr::mutate(across(
+    c(
+      Relid,
+      Spiritual.Identification,
+      Perc.Religious.Discrim
+    ),
+    ~ lead(.x, n = 2),
+    .names = "{col}_lead2"
+  )) %>% # make leads
+  dplyr::mutate(across(
+    c(
+      Relid,
+      Perc.Religious.Discrim
+    ),
+    ~ lead(.x, n = 3),
+    .names = "{col}_lead3"
+  )) %>% # make leads
+  dplyr::mutate(across(
+    c(
+      Relid,
+      Spiritual.Identification,
+      Perc.Religious.Discrim
+    ),
+    ~ lead(.x, n = 4),
+    .names = "{col}_lead4"
+  )) %>% # make leads
+    dplyr::mutate(across(c(
+      Relid,
+      Spiritual.Identification,
+      Perc.Religious.Discrim
+    ),
+    ~ lead(.x, n = 5),
+    .names = "{col}_lead5"
+ )) |> 
+  dplyr::filter(Wave == "Time8") |> 
+  filter(!is.na(Relid)) |> 
+  filter(!is.na(Relid_lead2)) |> 
+  filter(!is.na(Spiritual.Identification)) |> 
+  filter(!is.na(Spiritual.Identification_lead2)) |> 
+  filter(!is.na(Perc.Religious.Discrim)) |> 
+  filter(!is.na(Perc.Religious.Discrim_lead2))
+
+length(unique(dt_16b$Id))  
+  
+head(dt_16b) #14869
+saveh(dt_16b, "dt_16b")
+```
+
+```{r}
+#| label: mice
+#| include: false
+#| eval: false
+
+# mice model  -------------------------------------------------------------
+library(mice)
+mice_a <- dt_16b %>%
+  dplyr::select(-c(Wave, Id,TSCORE_b, TSCORE, YearMeasured, hold,	org2016,wave))  # won't otherwise run
+
+library(naniar)
+naniar::gg_miss_var(mice_a)
+#```
+
+# any col.inear vars?
+mice:::find.collinear(mice_a)
+
+# impute
+ppm_mice <- mice::mice(mice_a,  seed = 0, m = 10)
+
+# save
+saveh(ppm_mice, "religion-prej-ppm_mice-22")
+
+# read
+ppm_mice <- readh(  "religion-prej-ppm_mice-22" )
+# checks
+outlist2 <-
+  row.names(ppm_mice)[ppm_mice$outflux < 0.5]
+length(outlist2)
+
+# checks
+head(ppm_mice$loggedEvents, 10)
+
+# data wrangling
+ml <- mice::complete(ppm_mice, "long", inc = TRUE)
+
+# inspect data -- what do we care about?  Note that the moderate distress category doesn't look useful
+#skimr::skim(ml)
+
+
+# n ids
+dat_prep <- readh("dt_16b")
+N <- length(unique(dat_prep$Id))
+# create variables in z score
+
+ml <- ml %>%
+  dplyr::mutate(id = as.factor(rep(1:N, 11))) |> # needed for g-comp
+  droplevels() |>
+  dplyr::mutate(across(where(is.numeric), ~ scale(.x), .names = "{col}_z")) %>%
+  select(-c(.imp_z, .id_z)) |>
+  dplyr::mutate(EthCat = as.factor(EthCat),
+                Gender3  = as.factor(Gender3))
+
+# Get data into shape
+ml <- ml %>% mutate_if(is.matrix, as.vector)
+ml <- mice::as.mids(ml)
+mf <- mice::complete(ml, "long", inc = TRUE)
+
+#save
+saveh(ml,"religion-prej-ml")
+saveh(mf,"religion-prej-mf")
+```
+
+```{r}
+#| label: g-comp-setup-religion
+#| include: false
+
+###############  RENAME YOUR IMPUTED DATASET  'df"  ###############  ###############  ###############
+###############   IMPORANT DO THIS   ###############  ###############  ###############  ###############
+
+df <- readh("religion-prej-ml")
+# for reviewing variables
+mf <- readh("religion-prej-mf")
+
+# baseline covariates 
+cvars = c(
+  "AGREEABLENESS_z",
+  "CONSCIENTIOUSNESS_z",
+  "EXTRAVERSION_z",
+  "HONESTY_HUMILITY_z",
+  "NEUROTICISM_z",
+  "OPENNESS_z",
+  "Age_z",
+  "BornNZ_z",
+  "Church_z",
+  "Edu_z",
+  "Employed_z",
+  "EthCat",
+  "Gender3",
+  "KESSLER6sum_z",
+  "PWI_z",
+  "NZdep_z",
+  "NZSEI13_z",
+  "Parent_z",
+  "Partner_z",
+  "Pol.Orient_z",
+  "Relid_z",
+  "Spiritual.Identification_z",
+  "Urban_z"
+)
+
+
+############### SET YOUR EXPOSURE VARIABLE, ###############  ###############  ###############
+
+
+###############   IMPORTANT SET YOUR EXPOSURE VARIABLE
+
+X = "Relid_lead2"
+
+############### NEXT SET UP VARIABLES FOR MODELS AND GRAPHS
+
+# You may set your label for your graphs  HERE WE STICK TO THE EXAMPLE OF WORK
+
+#xlab = "Relid_lead2"  ## Religious Identification 
+xlab = "How important is your religion to how you see yourself?"
+
+# SET THE RANGE OF THE SCALE
+min = 0
+max = 7
+
+
+# set full range of X
+x =  min:max
+
+
+# range for some graphs
+minmax <- paste(c(x), sep = ",")
+
+
+# baseline condition. We could make it different
+r = 2
+
+# focal contrast for X
+f = 7
+
+# REQUIRED for certain model model functions
+c = x
+
+# contrast for graphs -- absolute distance from baseline
+p = c(r, f) #
+
+
+# Needed for E-VALUES -- how much do we move on the X scale to obtain our effect?
+#delta = 4 #
+delta = abs(r - f)
+
+ylim = c(-1, 1)  # SET AS YOU LIKE -- here, how much movement across a standard deviation unit of the outcome
+
+# mice imputed data
+
+# n imputations
+m = 10
+
+# standard deviation of the outcome (for evalues)
+sd = 1
+
+
+## OUTCOMES 
+Y = "Perc.Religious.Discrim_lead3_z"
+main = "Perceived Religious/Spiritual  Discrimination + 3 years (SD)"
+ylab = "Perceived Religious/Spiritual  Discrimination"
+sub = "I feel that I am often discriminated against because of my religious/spiritual beliefs."
+
+# regression
+out_m <- mice_gaussian(df = df,
+                       X = X,
+                       Y = Y,
+                       cvars = cvars)
+# summary(pool(out_m))
+
+## g-computation
+
+out_ct <-
+  pool_stglm_contrast(
+    out_m,
+    df = df,
+    m = 10,
+    X = X,
+    x = x,
+    r = r
+  )
+
+# coef + estimate for the contrast of interest # We  will combine the coeffients
+#  into a large table, later.
+descrimination_3_r_c  <-  vanderweelevalue_ols(out_ct, f - min, delta, sd)
+descrimination_3_r_c
+
+
+## table for all contrasts (exploratory )
+# tab <- out_ct %>%
+#   # #slice(1:max) |>
+#   tibble() |>
+#   rename(
+#     Contrast = row,
+#     Estimate = est,
+#     Std_error = se,
+#     CI_hi = ui,
+#     CI_lo = li
+#   ) |>
+#   kbl(caption = main,
+#       digits = 3,
+#       "html") |>
+#   kable_styling() %>%
+#   row_spec(c(f + 1 - min),
+#            bold = T,
+#            color = "white",
+#            background = "dodgerblue") |>
+#   kable_minimal(full_width = F)
+#
+# # show table
+# tab
+
+# graph
+descrimination_3_r_p <-
+  ggplot_stglm(
+    out_ct,
+    ylim = ylim,
+    main,
+    xlab,
+    ylab,
+    min = min,
+    p = p,
+    sub = sub
+  )
+
+descrimination_3_r_p
+
+
+
+## OUTCOMES 
+Y = "Perc.Religious.Discrim_lead4_z"
+main = "Perceived Religious/Spiritual  Discrimination + 4 years (SD)"
+ylab = "Perceived Religious/Spiritual  Discrimination"
+sub = "I feel that I am often discriminated against because of my religious/spiritual beliefs."
+
+# regression
+out_m <- mice_gaussian(df = df,
+                       X = X,
+                       Y = Y,
+                       cvars = cvars)
+# summary(pool(out_m))
+
+## g-computation
+
+out_ct <-
+  pool_stglm_contrast(
+    out_m,
+    df = df,
+    m = 10,
+    X = X,
+    x = x,
+    r = r
+  )
+
+# coef + estimate for the contrast of interest # We  will combine the coeffients
+#  into a large table, later.
+descrimination_4_r_c  <-  vanderweelevalue_ols(out_ct, f - min, delta, sd)
+descrimination_4_r_c
+
+# graph
+descrimination_4_r_p <-
+  ggplot_stglm(
+    out_ct,
+    ylim = ylim,
+    main,
+    xlab,
+    ylab,
+    min = min,
+    p = p,
+    sub = sub
+  )
+
+descrimination_4_r_p
+
+
+#  five years
+
+## OUTCOMES 
+Y = "Perc.Religious.Discrim_lead5_z"
+main = "Perceived Religious/Spiritual  Discrimination + 5 years (SD)"
+ylab = "Perceived Religious/Spiritual  Discrimination"
+sub = "I feel that I am often discriminated against because of my religious/spiritual beliefs."
+
+# regression
+out_m <- mice_gaussian(df = df,
+                       X = X,
+                       Y = Y,
+                       cvars = cvars)
+# summary(pool(out_m))
+
+## g-computation
+
+out_ct <-
+  pool_stglm_contrast(
+    out_m,
+    df = df,
+    m = 10,
+    X = X,
+    x = x,
+    r = r
+  )
+
+# coef + estimate for the contrast of interest # We  will combine the coeffients
+#  into a large table, later.
+descrimination_5_r_c  <-  vanderweelevalue_ols(out_ct, f - min, delta, sd)
+descrimination_5_r_c
+
+# graph
+descrimination_5_r_p <-
+  ggplot_stglm(
+    out_ct,
+    ylim = ylim,
+    main,
+    xlab,
+    ylab,
+    min = min,
+    p = p,
+    sub = sub
+  )
+```
+
+```{r}
+#| label: fig-rel-to-dis
+#| echo: false
+#| fig-cap: "Religious Identification Effects on Religious/Spiritual Discrimination."
+#| fig-subcap:
+#|   - "3 year causal effect of Religious Identification on Religious/Spiritual Discrimination"
+#|   - "5 year causal effect of Religious Identification on Religious/Spiritual Discrimination"
+#| layout-ncol: 2
+#| column: page
+descrimination_3_r_p
+descrimination_5_r_p
+```
+
+```{r}
+#| label: g-comp-setup-spirituality
+#| include: false
+
+###############  RENAME YOUR IMPUTED DATASET  'df"  ###############  ###############  ###############
+###############   IMPORANT DO THIS   ###############  ###############  ###############  ###############
+
+df <- readh("religion-prej-ml")
+
+# baseline covariates 
+cvars = c(
+  "AGREEABLENESS_z",
+  "CONSCIENTIOUSNESS_z",
+  "EXTRAVERSION_z",
+  "HONESTY_HUMILITY_z",
+  "NEUROTICISM_z",
+  "OPENNESS_z",
+  "Age_z",
+  "BornNZ_z",
+  "Church_z",
+  "Edu_z",
+  "Employed_z",
+  "EthCat",
+  "Gender3",
+  "KESSLER6sum_z",
+  "PWI_z",
+  "NZdep_z",
+  "NZSEI13_z",
+  "Parent_z",
+  "Partner_z",
+  "Pol.Orient_z",
+  "Relid_z",
+  "Spiritual.Identification_z",
+  "Urban_z"
+)
+
+
+
+
+############### SET YOUR EXPOSURE VARIABLE, ###############  ###############  ###############
+
+
+###############   IMPORTANT SET YOUR EXPOSURE VARIABLE
+
+X = "Spiritual.Identification_lead2"
+
+############### NEXT SET UP VARIABLES FOR MODELS AND GRAPHS
+
+# You may set your label for your graphs  HERE WE STICK TO THE EXAMPLE OF WORK
+
+#xlab = "Relid_lead2"  ## Religious Identification 
+xlab = "I identify as a spiritual person."
+
+# SET THE RANGE OF THE SCALE
+min = 0
+max = 7
+
+
+# set full range of X
+x =  min:max
+
+
+# range for some graphs
+minmax <- paste(c(x), sep = ",")
+
+
+# baseline condition. We could make it different
+r = 2
+
+# focal contrast for X
+f = 7
+
+# REQUIRED for certain model model functions
+c = x
+
+# contrast for graphs -- absolute distance from baseline
+p = c(r, f) #
+
+
+# Needed for E-VALUES -- how much do we move on the X scale to obtain our effect?
+#delta = 4 #
+delta = abs(r - f)
+
+ylim = c(-1, 1)  # SET AS YOU LIKE -- here, how much movement across a standard deviation unit of the outcome
+
+# mice imputed data
+
+# n imputations
+m = 10
+
+# standard deviation of the outcome (for evalues)
+sd = 1
+
+
+## OUTCOMES 
+Y = "Perc.Religious.Discrim_lead3_z"
+main = "Perceived Religious/Spiritual  Discrimination + 3 years (SD)"
+ylab = "Perceived Religious/Spiritual  Discrimination"
+sub = "I feel that I am often discriminated against because of my religious/spiritual beliefs."
+
+# regression
+out_m <- mice_gaussian(df = df,
+                       X = X,
+                       Y = Y,
+                       cvars = cvars)
+# summary(pool(out_m))
+
+## g-computation
+
+out_ct <-
+  pool_stglm_contrast(
+    out_m,
+    df = df,
+    m = 10,
+    X = X,
+    x = x,
+    r = r
+  )
+
+# coef + estimate for the contrast of interest # We  will combine the coeffients
+#  into a large table, later.
+descrimination_3_s_c  <-  vanderweelevalue_ols(out_ct, f - min, delta, sd)
+descrimination_3_s_c
+
+
+## table for all contrasts (exploratory )
+# tab <- out_ct %>%
+#   # #slice(1:max) |>
+#   tibble() |>
+#   rename(
+#     Contrast = row,
+#     Estimate = est,
+#     Std_error = se,
+#     CI_hi = ui,
+#     CI_lo = li
+#   ) |>
+#   kbl(caption = main,
+#       digits = 3,
+#       "html") |>
+#   kable_styling() %>%
+#   row_spec(c(f + 1 - min),
+#            bold = T,
+#            color = "white",
+#            background = "dodgerblue") |>
+#   kable_minimal(full_width = F)
+#
+# # show table
+# tab
+
+# graph
+descrimination_3_s_p <-
+  ggplot_stglm(
+    out_ct,
+    ylim = ylim,
+    main,
+    xlab,
+    ylab,
+    min = min,
+    p = p,
+    sub = sub
+  )
+
+descrimination_3_s_p
+
+
+#  five years
+
+## OUTCOMES 
+Y = "Perc.Religious.Discrim_lead5_z"
+main = "Perceived Religious/Spiritual Discrimination + 5 years (SD)"
+ylab = "Perceived Religious/Spiritual  Discrimination"
+sub = "I feel that I am often discriminated against because of my religious/spiritual beliefs."
+
+# regression
+out_m <- mice_gaussian(df = df,
+                       X = X,
+                       Y = Y,
+                       cvars = cvars)
+# summary(pool(out_m))
+
+## g-computation
+
+out_ct <-
+  pool_stglm_contrast(
+    out_m,
+    df = df,
+    m = 10,
+    X = X,
+    x = x,
+    r = r
+  )
+
+# coef + estimate for the contrast of interest # We  will combine the coeffients
+#  into a large table, later.
+descrimination_5_s_c  <-  vanderweelevalue_ols(out_ct, f - min, delta, sd)
+descrimination_5_s_c
+
+# graph
+descrimination_5_s_p <-
+  ggplot_stglm(
+    out_ct,
+    ylim = ylim,
+    main,
+    xlab,
+    ylab,
+    min = min,
+    p = p,
+    sub = sub
+  )
+descrimination_5_s_p
+```
+
+```{r}
+#| label: fig-spi-to-dis
+#| echo: false
+#| fig-cap: "Spirituality Effects on Religious/Spiritual Discrimination."
+#| fig-subcap:
+#|   - "3 year causal effect of Spiritual Identification on Religious/Spiritual Discrimination"
+#|   - "5 year causal effect of Spiritual Identification on Religious/Spiritual Discrimination"
+#| layout-ncol: 2
+#| column: page
+descrimination_3_s_p
+descrimination_5_s_p
+```
+
+```{r}
+#| label: g-comp-setup-dis
+#| include: false
+
+###############  RENAME YOUR IMPUTED DATASET  'df"  ###############  ###############  ###############
+###############   IMPORANT DO THIS   ###############  ###############  ###############  ###############
+
+df <- readh("religion-prej-ml")
+
+# baseline covariates 
+cvars = c(
+  "AGREEABLENESS_z",
+  "CONSCIENTIOUSNESS_z",
+  "EXTRAVERSION_z",
+  "HONESTY_HUMILITY_z",
+  "NEUROTICISM_z",
+  "OPENNESS_z",
+  "Age_z",
+  "BornNZ_z",
+  "Church_z",
+  "Edu_z",
+  "Employed_z",
+  "EthCat",
+  "Gender3",
+  "KESSLER6sum_z",
+  "PWI_z",
+  "NZdep_z",
+  "NZSEI13_z",
+  "Parent_z",
+  "Partner_z",
+  "Pol.Orient_z",
+  "Relid_z",
+  "Spiritual.Identification_z",
+  "Urban_z"
+)
+
+
+###############  SET YOUR EXPOSURE VARIABLE
+X = "Perc.Religious.Discrim_lead2_z"
+############### NEXT SET UP VARIABLES FOR MODELS AND GRAPHS
+
+# You may set your label for your graphs  HERE WE STICK TO THE EXAMPLE OF WORK
+#"How important is your religion to how you see yourself?"
+#xlab = "I identify as a spiritual person."
+xlab =  "I feel that I am often discriminated against because of my religious/spiritual beliefs."
+
+
+# SET THE RANGE OF THE SCALE
+min = -.5
+max = 2
+
+
+# set full range of X
+x =  min:max
+
+
+# range for some graphs
+minmax <- paste(c(x), sep = ",")
+
+
+# baseline condition. We could make it different
+r = -.5
+
+# focal contrast for X
+f = .5
+
+# REQUIRED for certain model model functions
+c = x
+
+# contrast for graphs -- absolute distance from baseline
+p = c(r, f) #
+
+
+# Needed for E-VALUES -- how much do we move on the X scale to obtain our effect?
+#delta = 4 #
+delta = abs(r - f)
+
+ylim = c(-1, 1)  # SET AS YOU LIKE -- here, how much movement across a standard deviation unit of the outcome
+
+# mice imputed data
+
+# n imputations
+m = 10
+
+# standard deviation of the outcome (for evalues)
+sd = 1
+
+## OUTCOMES 
+Y = "Relid_lead4_z"
+main = "Religious Identification + 4 years (SD)"
+ylab = "Religious Identification"
+sub = "How important is your religion to how you see yourself?"
+
+# regression
+out_m <- mice_gaussian(df = df,
+                       X = X,
+                       Y = Y,
+                       cvars = cvars)
+# summary(pool(out_m))
+
+## g-computation
+
+out_ct <-
+  pool_stglm_contrast(
+    out_m,
+    df = df,
+    m = 10,
+    X = X,
+    x = x,
+    r = r
+  )
+
+# coef + estimate for the contrast of interest # We  will combine the coeffients
+#  into a large table, later.
+descrimination_4_pr_Rc  <-  vanderweelevalue_ols(out_ct, f - min, delta, sd)
+descrimination_4_pr_Rc
+
+# graph
+descrimination_4_pr_Rp <-
+  ggplot_stglm(
+    out_ct,
+    ylim = ylim,
+    main,
+    xlab,
+    ylab,
+    min = min,
+    p = p,
+    sub = sub
+  )
+
+descrimination_4_pr_Rp
+
+
+#  Spirituality
+
+## OUTCOMES 
+Y = "Spiritual.Identification_lead4_z"
+main = "Spiritual Identification + 4 years (SD)"
+ylab = "Spiritual Identification"
+sub = "I identify as a spiritual person."
+
+# regression
+out_m <- mice_gaussian(df = df,
+                       X = X,
+                       Y = Y,
+                       cvars = cvars)
+# summary(pool(out_m))
+
+## g-computation
+
+out_ct <-
+  pool_stglm_contrast(
+    out_m,
+    df = df,
+    m = 10,
+    X = X,
+    x = x,
+    r = r
+  )
+
+# coef + estimate for the contrast of interest # We  will combine the coeffients
+#  into a large table, later.
+descrimination_4_pr_Sc  <-  vanderweelevalue_ols(out_ct, f - min, delta, sd)
+descrimination_4_pr_Sc
+
+# graph
+descrimination_4_pr_Sp <-
+  ggplot_stglm(
+    out_ct,
+    ylim = ylim,
+    main,
+    xlab,
+    ylab,
+    min = min,
+    p = p,
+    sub = sub
+  )
+
+descrimination_4_pr_Sc
+descrimination_4_pr_Rc
+```
+
+```{r}
+#| label: fig-dis-to-rs
+#| echo: false
+#| fig-cap: "Religious/Spiritual Discrimination effects on Religious/Spiritual Identification."
+#| fig-subcap:
+#|   - "4 year causal effect of Religious/Spiritual Discrimination on Religious Identification"
+#|   - "4 year causal effect of Religious/Spiritual Discrimination on Spiritual Identification"
+#| layout-ncol: 2
+#| column: page
+descrimination_4_pr_Rp
+descrimination_4_pr_Sp
+```
+
+
+
+## Conclusion
+
+Notes: - do experiences of prejudice among people of the faith foster greater acceptance of religious minorities [@shaver2016]?
+
+The topic is under-researched. religious decline is slow. Although religious people are a minority in New Zealand, for most of New Zealand's colonial history there has been a religious majority. Because the decline in religious identification is less than 1% annually, the proportion of religious proportion year-to-year is not substantially different [@hoverd2015]. Like the receding of a glacier, the decline of the religious minority is not readily apparent to the naked eye. Although these facts may help to explain the poverty of research on anti-religious prejudice, they do not provide excuses for ignoring it.
+
+## Importance
+
+There are three audiences who might be interested in the longitudinal study of anti-religious prejudice.
+
+First, there are social scientists. There has been considerable scientific attention to study of prejudice against historically marginalised groups. However, in countries such as New Zealand, religious people have only recently become the minority. Moreover, the bulk of prejudice research occurs in North America where the religiously identified remain a majority.
+
+Second, there are philosophers and theologians. If we assume that good philosophy and theology must be grounded in the facts, it would seem important to include a growing religious minority in philosophical and theological reflection about prejudice.
+
+Third, there are members of religious communities, including clergy. If the study of anti-religious prejudice reveals that many religious people are indeed experiencing greater prejudice religious communities should want to know.
+

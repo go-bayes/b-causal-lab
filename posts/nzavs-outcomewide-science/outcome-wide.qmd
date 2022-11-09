@@ -45,7 +45,7 @@ if (Sys.info()[["sysname"]] == "Darwin" && Sys.info()[["machine"]] == "arm64") {
 
 
 ```{r, eval=FALSE}
-#tinytex::tlmgr_install("tikz-cd")
+# V
 ```
 
 
